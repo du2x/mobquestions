@@ -1,3 +1,6 @@
+import sys
+sys.path.append('users')
+
 from flask import Flask, request, jsonify, redirect
 from flask_pymongo import PyMongo
 
@@ -6,6 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 
 from config import MONGO_URI
+
+from put_users import put_users
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = MONGO_URI

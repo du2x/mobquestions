@@ -12,4 +12,5 @@
 #MONGO_USERNAME='ada'
 #MONGO_PASSWORD='chuvinha10'
 #MONGO_DBNAME='ubiqs'
-MONGO_URI='mongodb://ada:chuvinha10@ds043358.mlab.com:43358/ubiqs'
+
+MONGO_URI='mongodb://user:user@ds045618.mlab.com:45618/poc_puc'
