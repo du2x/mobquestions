@@ -10,8 +10,6 @@ from bson import json_util
 
 from config import MONGO_URI
 
-from put_users import put_users
-
 app = Flask(__name__)
 app.config['MONGO_URI'] = MONGO_URI
 app.config['DEBUG'] = True
@@ -29,7 +27,7 @@ def index():
     res = col_users.find({})
     return json_util.dumps(list(res)), 201
 
-@app.route('/users', methods=['POST'])
+@app.route('/v1/users', methods=['POST'])
 def create_user():
     data = request.get_json()
     data['password'] = generate_password_hash(data['password'])
@@ -39,6 +37,13 @@ def create_user():
 @app.route('/users/<username>', methods=['GET'])
 def get_user(username):
     return username, 200
+
+@app.route('/v1/users/<username>', methods=['PUT'])
+def put_user(username):
+    user = request.get_json()
+    user['password'] = generate_password_hash(user['password'])
+    col_users.update_one({'username': username}, {'$set': user})
+    return 'usuario ' + user['username'] + ' atualizado.', 200
 
 # rota para exemplificar como utilizar obter variaveis
 # de url. teste acessando 
