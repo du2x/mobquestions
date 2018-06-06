@@ -30,24 +30,42 @@ def index():
 @app.route('/v1/users', methods=['POST'])
 def create_user():
     data = request.get_json()
-    data['password'] = generate_password_hash(data['password'])
-    col_users.insert_one(data)
-    return 'usuario ' + data['username'] + ' criado.', 201
+    username = data['username']
+    
+    user = res_get = col_users.find_one({'username': username}, {'_id': 0, 'username': 1})
 
-@app.route('v1/users/<username>', methods=['GET'])
+    if user is None:
+        data['password'] = generate_password_hash(data['password'])
+        col_users.insert_one(data)
+        return 'usuario ' + data['username'] + ' criado.', 201
+    else:
+        return 'usuario ' + data['username'] + ' já existe.', 203
+
+@app.route('/v1/users/<username>', methods=['GET'])
 def get_user(username):
-    res_get = col_users.find_one({'username': username})
+    res_get = col_users.find_one({'username': username}, {'_id': 0, 'password': 0})
     if res_get == None: 
         return 'Usuário não encontrado', 404
     else:
-        return json_util.dumps(list(res_get)), 200
+        return json_util.dumps(res_get), 200
 
 @app.route('/v1/users/<username>', methods=['PUT'])
 def put_user(username):
-    user = request.get_json()
-    user['password'] = generate_password_hash(user['password'])
-    col_users.update_one({'username': username}, {'$set': user})
-    return 'usuario ' + user['username'] + ' atualizado.', 200
+    data = request.get_json()
+    print(data)
+    user = {}
+    if data.get('email', None) is not None:
+        user['email'] = data['email']
+    if data.get('name', None) is not None:
+        user['name'] = data['name']
+    if data.get('phones', None) is not None:
+        user['phones'] = data['phones']
+    
+    if user == {}:
+        return 'bad request', 400
+    else:
+        col_users.update_one({'username': username}, {'$set': user})
+        return 'usuario ' + username + ' atualizado.', 200
 
 # rota para exemplificar como utilizar obter variaveis
 # de url. teste acessando 
