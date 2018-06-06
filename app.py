@@ -34,7 +34,7 @@ def create_user():
     col_users.insert_one(data)
     return 'usuario ' + data['username'] + ' criado.', 201
 
-@app.route('/users/<username>', methods=['GET'])
+@app.route('v1/users/<username>', methods=['GET'])
 def get_user(username):
     res_get = col_users.find_one({'username': username})
     if res_get == None: 
@@ -52,7 +52,7 @@ def put_user(username):
 # rota para exemplificar como utilizar obter variaveis
 # de url. teste acessando 
 # http://localhost:8088/questions/search?disciplina=BancoDeDados 
-@app.route('/questions/search', methods=['GET'])
+@app.route('/v1/questions/search', methods=['GET'])
 def search():
     disciplina = request.args.get('disciplina')
     return disciplina, 200
