@@ -25,7 +25,7 @@ col_questions = mongo.db.questions
 @app.route('/', methods=['GET'])
 def index():
     res = col_users.find({})
-    return json_util.dumps(list(res)), 201
+    return json_util.dumps(list(res)), 200
 
 @app.route('/v1/users', methods=['POST'])
 def create_user():
@@ -36,7 +36,11 @@ def create_user():
 
 @app.route('/users/<username>', methods=['GET'])
 def get_user(username):
-    return username, 200
+    res_get = col_users.find_one({'username': username})
+    if res_get == None: 
+        return 'Usuário não encontrado', 404
+    else:
+        return json_util.dumps(list(res_get)), 200
 
 @app.route('/v1/users/<username>', methods=['PUT'])
 def put_user(username):
