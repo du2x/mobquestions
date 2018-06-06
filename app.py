@@ -33,7 +33,7 @@ def create_user():
     username = data['username']
     
     user = col_users.find_one({'username': username}, {'_id': 0, 'username': 1})
-    
+
     if user is None:
         data['password'] = generate_password_hash(data['password'])
         col_users.insert_one(data)
@@ -78,7 +78,6 @@ def search():
 @app.route('/v1/authenticate', methods=['POST'])
 def authenticate():
     data = request.get_json()
-    print('data')
     user = col_users.find_one({'username': data['username']})
     if  'username' in data.keys() and 'password' in data.keys(): 
         if user  == None: 
