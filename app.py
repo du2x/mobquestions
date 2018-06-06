@@ -52,8 +52,8 @@ def get_user(username):
 @app.route('/v1/users/<username>', methods=['PUT'])
 def put_user(username):
     data = request.get_json()
-    print(data)
     user = {}
+
     if data.get('email', None) is not None:
         user['email'] = data['email']
     if data.get('name', None) is not None:
