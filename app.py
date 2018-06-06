@@ -34,7 +34,7 @@ def create_user():
     col_users.insert_one(data)
     return 'usuario ' + data['username'] + ' criado.', 201
 
-@app.route('v1/users/<username>', methods=['GET'])
+@app.route('/v1/users/<username>', methods=['GET'])
 def get_user(username):
     res_get = col_users.find_one({'username': username})
     if res_get == None: 
@@ -56,3 +56,19 @@ def put_user(username):
 def search():
     disciplina = request.args.get('disciplina')
     return disciplina, 200
+
+@app.route('/v1/authenticate', methods=['POST'])
+def authenticate():
+    data = request.get_json()
+    print('data')
+    user = col_users.find_one({'username': data['username']})
+    if  'username' in data.keys() and 'password' in data.keys(): 
+        if user  == None: 
+            return 'Dados não enviados corretamente', 403
+        else: 
+            if check_password_hash(user['password'], data['password']) == True:
+                return 'Usuário autenicado com sucesso', 200
+            else: 
+                return 'Dados não enviados corretamente', 403
+    else:
+        return 'Dados não enviados corretamente', 400
