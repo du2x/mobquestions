@@ -34,7 +34,7 @@ git clone https://github.com/<seu_nome_de_usuario>/mobquestions
 
 Implemente as seguintes rotas.
 
-0. PUT /v1/users/ (novo usuário)
+0. Done - POST /v1/users/ (novo usuário)
 cadastra um novo usuário, com os dados: username, password, email, name, phones.
 retorna status code 201 caso o usuário seja criado; caso o 
 *username* enviado já exista na base de dados, retornar status code 203.
@@ -43,10 +43,10 @@ exemplo de dados de request:
 {"username": "mark", "password": "a123", "email": "mark@knopfler.com", "name": "Mark", "phones": ["3333-2222", "2222-3333"]}
 ```
 
-1. GET /v1/users/<username>  (obtenção de usuário)
+1. Done - GET /v1/users/<username>  (obtenção de usuário)
 retorna os dados do usuário correspondente (pelo username) em formato JSON e o status code 200; ou status code 404 caso o usuário não exista.
 
-2. POST /v1/authenticate (autenticação de usuário)
+2. Done - POST /v1/authenticate (autenticação de usuário)
 valida a combinação username e password enviadas.
 retorna status code 200 em caso de sucesso; e 403, caso a combinação seja inválida, e 401 caso não tenha sido enviados os dois valores: *username* e *password*.
 utilize-se a função check_password_hash para comparar o password enviado com o password na base de dados da seguinte forma (por exemplo): `check_password_hash(password_encontrado, password_enviado)`. Esta função retorna True se houver "correspondência".
@@ -55,7 +55,7 @@ exemplo de dados de request:
 {"username": "mark", "password": "a123"}
 ```
 
-3. POST /v1/users/<username> (atualização de dados de usuário)
+3. Done - PUT /v1/users/<username> (atualização de dados de usuário)
 atualiza os dados do usuário correspondente (pelo username). os campos possíveis de modificação são name; email e phones.
 ```javascript
 {"name": "Markin", "phones": ["3333-2222"]}
