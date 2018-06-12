@@ -85,3 +85,32 @@ exemplo de dados de request:
 ```javascript
 {"disciplina": [1, 3], "ano": 2013}
 ```
+8. Modifique as implementações das rotas 3. e 6. para que elas requeiram o envio de um token válido. Teste-os com Postman.
+
+9. POST /v1/questions/<question_id>/answer  (responder questao)
+retorna se a resposta enviada foi correta ou não. Esta rota deve requerer o envio de um token válido.
+
+10. GET /v1/questions/answers (visualizar respostas)
+retorna as respostas enviadas (answer) nas questões respondidas pelo usuário autenticado. Observe que para que isso seja possível, a implementação rota 9. deve armazenar as respostas enviadas pelo usuário.
+Esta rota deve requerer o envio de um token válido. 
+O retorno deve ser no formato como do exemplo abaixo:
+```javascript
+[{"id": "q234541-4c", "answer": "E"},
+{"id": "w23as41-5b", "answer": "C"}
+]
+```
+
+## Deploy em Heroku
+
+Heroku é um serviço de plataforma como serviço em nuvens.
+
+Para realizar o deploy você deve:
+
+1. Criar uma conta em heroku.com
+2. Ao logar em heroku.com você entrará em https://dashboard.heroku.com/apps. Neste painel, acesse o menu "New" no topo e à direita, e escolha a opção "Create new app"
+3. Escolha o nome seu_nome_de_usuario_no_github-questions para o seu app e clique em Create app.
+4. Agora na seção Deployment method clique em Github e pesquise e escolha o seu repositório mobquestions.
+5. Na seção Automatic Deploys, clique em Enable Automatic Deploys. A partir de agora, sempre que você realizar um git push (atualizar o seu repositório), o heroku irá atualizar a aplicação.
+6. Na seção Manual deploy. clique em deploy branch. Isso mesmo, o primeiro deploy será manual.
+  
+Para aferir o deploy, acesse https://seu_nome_de_usuario_no_github-questions.herokuapp.com
