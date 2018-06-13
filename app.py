@@ -137,7 +137,7 @@ def authenticate():
                 return 'Dados não enviados corretamente', 403
     else:
         return 'Dados não enviados corretamente', 400
-  @app.route('/v1/users/<username>', methods=['PATCH']) 
+@app.route('/v1/users/<username>', methods=['PATCH']) 
 def patch_password(username):
     data = request.get_json()
     user = {}
