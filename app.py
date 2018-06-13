@@ -137,3 +137,21 @@ def authenticate():
                 return 'Dados não enviados corretamente', 403
     else:
         return 'Dados não enviados corretamente', 400
+  @app.route('/v1/users/<username>', methods=['PATCH']) 
+def patch_password(username):
+    data = request.get_json()
+    user = {}
+    if data.get('password', None) is not None:
+        user['password'] = generate_password_hash(data['password'])    
+    if user == {}:
+        return 'bad request', 400
+    else:
+        col_users.update_one({'username': username}, {'$set': user})
+        return 'Senha do usuário ' + username + ' atualizada.', 200
+
+@app.route('/v1/questions/search', methods=['GET'])
+def search():
+    questao = request.args.get('question_id')
+    resposta = col_questions.find_one({'id': questao})
+    return json_util.dumps(resposta), 200  
+    
