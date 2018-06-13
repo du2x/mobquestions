@@ -61,14 +61,14 @@ atualiza os dados do usuário correspondente (pelo username). os campos possíve
 {"name": "Markin", "phones": ["3333-2222"]}
 ```
 
-4. PATCH /v1/users/<username> (redefinição de senha)
+4. Done PATCH /v1/users/<username> (redefinição de senha)
 modifica o password do usuário correspondente (pelo username). 
 exemplo de dados de request: 
 ```javascript
 {"password": "value"}
 ```
 
-5. GET /v1/questions/<question_id> (obtenção de questão)
+5. Done GET /v1/questions/<question_id> (obtenção de questão)
 retorna os dados da questão correpondente (pelo username) em formato JSON e o status code 200; ou status code 404 caso a questão não exista.
 
 
