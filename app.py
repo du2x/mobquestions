@@ -118,10 +118,11 @@ def put_user(username):
 # rota para exemplificar como utilizar obter variaveis
 # de url. teste acessando 
 # http://localhost:8088/questions/search?disciplina=BancoDeDados 
-@app.route('/v1/questions/search', methods=['GET'])
-def search():
-    disciplina = request.args.get('disciplina')
-    return disciplina, 200
+#Função search
+#@app.route('/v1/questions/search', methods=['GET'])
+#def search():
+#    disciplina = request.args.get('disciplina')
+#    return disciplina, 200
 
 @app.route('/v1/authenticate', methods=['POST'])
 def authenticate():
@@ -132,7 +133,7 @@ def authenticate():
             return 'Dados não enviados corretamente', 403
         else: 
             if check_password_hash(user['password'], data['password']) == True:
-                return 'Usuário autenicado com sucesso', 200
+                return 'Usuário autenticado com sucesso', 200
             else: 
                 return 'Dados não enviados corretamente', 403
     else:
@@ -154,4 +155,28 @@ def search():
     questao = request.args.get('question_id')
     resposta = col_questions.find_one({'id': questao})
     return json_util.dumps(resposta), 200  
+
+@app.route('/v1/questions/<question_id>', methods=['GET'])
+def get_question(question_id):
+    res_get = col_questions.find_one({'id': question_id})
+    if res_get == None: 
+        return 'Questão não encontrada', 404
+    else:
+        return json_util.dumps(res_get), 200
+
+@app.route('/v1/questions/<question_id>/comment', methods=['POST'])
+def authenticate():
+    data = request.get_json()
+    questao = col_questions.find_one({'id': question_id})
+    user = col_users.find_one({'username': data['username']})
+    if  'username' in data.keys() and 'message' in data.keys(): 
+        if user  == None: 
+            return 'Dados não enviados corretamente', 403
+        else: 
+            if data[comment] == None:
+                return 'Dados não enviados corretamente', 200
+            else: 
+                col_questions.update_one('id':questao), 403
+    else:
+        return 'Dados não enviados corretamente', 400
     
