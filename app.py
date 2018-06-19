@@ -211,7 +211,7 @@ def insert_answer(question_id):
         }
         
         col_answers.insert_one(answer)
-        col_questions.update_one({'id': question_id}, {$set: {$inc: {'answersNumber': 1}}})
+        col_questions.update_one({'id': question_id}, {'$set': {'$inc': {'answersNumber': 1}}})
 
         if answer_is_correct:
             return 'Resposta Correta.', 200
