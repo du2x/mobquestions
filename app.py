@@ -103,6 +103,7 @@ def get_user(username):
         return json_util.dumps(res_get), 200
 
 @app.route('/v1/users/<username>', methods=['PUT'])
+@jwt_required
 def put_user(username):
     data = request.get_json()
     user = {}
