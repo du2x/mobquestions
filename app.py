@@ -166,21 +166,23 @@ def get_question(question_id):
         return json_util.dumps(res_get), 200
 
 @app.route('/v1/questions/<question_id>/comment', methods=['POST'])
+@jwt_required
 def insert_comment(question_id):
     data = request.get_json()
     questao = col_questions.find_one({'id': question_id})
     user = col_users.find_one({'username': data['username']})
     comment = {}
     comment['username'] = data['username']
-    comment['comment'] = data['comment']
+    comment['message'] = data['message']
     if  'username' in data.keys() and 'message' in data.keys(): 
         if user  == None: 
-            return 'Dados não enviados corretamente', 403
+            return 'Dados não enviados corretamente', 401
         else: 
-            if data['comment'] == None:
-                return 'Dados não enviados corretamente', 403
-            else: 
-                col_questions.update_one({'id': questao}, {'$set': comment}), 200
+            if questao == None:
+                return 'Dados não enviados corretamente', 404
+            else:
+                col_questions.update_one({'id': question_id}, {'$set': comment}), 200
+                return "Questão atualizada com sucesso!"
     else:
-        return 'Dados não enviados corretamente', 400
+        return 'Dados não enviados corretamente', 401
     
