@@ -100,6 +100,12 @@ O retorno deve ser no formato como do exemplo abaixo:
 ]
 ```
 
+11. POST `/v1/featured_questions` (atualizar perguntas destaque)
+atualiza o cache com as perguntas mais respondidas. antes de implementar esta rota, modifique a implementação da rota 9. de modo que inclua um contador de número de respostas na questão sendo respondida. 
+
+12. GET `/v1/featured_questions` (perguntas destaque)
+retorna as perguntas mais respondidas. Deve utilizar o cache para obter o resultado.
+
 ## Deploy em Heroku
 
 Heroku é um serviço de plataforma como serviço em nuvens.
