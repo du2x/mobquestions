@@ -222,4 +222,10 @@ def insert_answer(question_id):
 @app.route('/v1/questions/answer', methods=['GET'])
 @jwt_required
 def get_answer():
-    return '', 200
+    jwt = g.parsed_token
+    answers = list(col_answers.find({'username': jwt['username']}, {'_id': 0, 'id': 1, 'answer': 1}))
+    
+    if len(answers) > 0:
+        return json_util.dumps(answers), 200
+    else:
+        return 'Not Found', 404
