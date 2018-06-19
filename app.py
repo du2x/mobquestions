@@ -21,6 +21,8 @@ mongo = PyMongo(app)
 col_users = mongo.db.users
 col_questions = mongo.db.questions
 col_tokens = mongo.db.tokens        # refresh tokens
+col_answers = mongo.db.answers
+
 
 def authenticate(username, password):
     user = col_users.find_one({'username': username})
@@ -187,4 +189,37 @@ def insert_comment(question_id):
                 return "Questão atualizada com sucesso!"
     else:
         return 'Dados não enviados corretamente', 401
-    
+
+
+@app.route('/v1/questions/<question_id>/answer', methods=['POST'])
+@jwt_required
+def insert_answer(question_id):
+    data = request.get_json()
+    jwt = g.parsed_token
+    userAnswer = data['answer'].upper()
+    answer = col_answers.find_one({'question_id': question_id, 'username': jwt['username']})
+
+    if answer is None:
+        question = col_questions.find_one({'id': question_id}, {'_id': 0, 'resposta': 1})
+        answer_is_correct = True if userAnswer == question['resposta'] else False
+        
+        answer = {
+            'question_id': question_id,
+            'username': jwt['username'],
+            'answer': userAnswer,
+            'answer_is_correct': answer_is_correct
+        }
+        
+        col_answers.insert_one(answer)
+
+        if answer_is_correct:
+            return 'Resposta Correta.', 200
+        else:
+            return 'Resposta Incorreta.', 200
+    else:
+        return 'Resposta já registrada.', 203
+
+@app.route('/v1/questions/answer', methods=['GET'])
+@jwt_required
+def get_answer():
+    return '', 200
