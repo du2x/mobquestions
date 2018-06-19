@@ -22,13 +22,18 @@ col_users = mongo.db.users
 col_questions = mongo.db.questions
 col_tokens = mongo.db.tokens        # refresh tokens
 
-
 def authenticate(username, password):
     user = col_users.find_one({'username': username})
     if user and check_password_hash(user['password'], password):
         return user
     else:
         return None
+
+def int_try_parse(value):
+    try:
+        return int(value)
+    except ValueError:
+        return value
 
 @app.route('/signin', methods=['POST'])
 def signin():
@@ -115,15 +120,6 @@ def put_user(username):
         col_users.update_one({'username': username}, {'$set': user})
         return 'usuario ' + username + ' atualizado.', 200
 
-# rota para exemplificar como utilizar obter variaveis
-# de url. teste acessando 
-# http://localhost:8088/questions/search?disciplina=BancoDeDados 
-#Função search
-#@app.route('/v1/questions/search', methods=['GET'])
-#def search():
-#    disciplina = request.args.get('disciplina')
-#    return disciplina, 200
-
 @app.route('/v1/authenticate', methods=['POST'])
 def authenticate_user():
     data = request.get_json()
@@ -153,9 +149,14 @@ def patch_password(username):
 
 @app.route('/v1/questions/search', methods=['GET'])
 def search():
-    questao = request.args.get('question_id')
-    resposta = col_questions.find_one({'id': questao})
-    return json_util.dumps(resposta), 200  
+    args = request.args.to_dict()
+    if 'disciplina' in args:
+        args['disciplina'] = int_try_parse(args['disciplina'])
+    if 'ano' in args:
+        args['ano'] = int_try_parse(args['ano'])
+
+    questions = col_questions.find(args)
+    return json_util.dumps(list(questions)), 200
 
 @app.route('/v1/questions/<question_id>', methods=['GET'])
 def get_question(question_id):
