@@ -109,6 +109,7 @@ atualiza o cache com as perguntas mais respondidas. antes de implementar esta ro
 12. GET `/v1/featured_questions` (perguntas destaque)
 retorna as perguntas mais respondidas. Deve utilizar o cache para obter o resultado.
 
+
 ## Deploy em Heroku
 
 Heroku é um serviço de plataforma como serviço em nuvens.
@@ -121,7 +122,7 @@ Para realizar o deploy você deve:
 4. Agora na seção Deployment method clique em Github e pesquise e escolha o seu repositório mobquestions.
 5. Na seção Automatic Deploys, clique em Enable Automatic Deploys. A partir de agora, sempre que você realizar um git push (atualizar o seu repositório), o heroku irá atualizar a aplicação.
 6. Na seção Manual deploy. clique em deploy branch. Isso mesmo, o primeiro deploy será manual.
-7. Vamos agora adicionar um add-on de cache: *heroku redis*. Clique na aba overview, depois em *Configure Add-ons*. Pesquise e incluida *heroku redis*.
+7. Vamos agora adicionar um add-on de cache: *heroku redis*. Clique na aba overview, depois em *Configure Add-ons*. Pesquise na caixa de texto de Add-ons e inclua *heroku redis*.
   
 Para aferir o *deploy*, acesse https://seu_nome_de_usuario_no_github-questions.herokuapp.com
 
