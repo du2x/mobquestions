@@ -8,6 +8,9 @@ from bson import json_util
 from config import MONGO_URI
 from auth import *
 
+import redis
+
+rcache = redis.Redis( host='redis-12770.c12.us-east-1-4.ec2.cloud.redislabs.com', port=12770)
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = MONGO_URI
@@ -211,7 +214,6 @@ def insert_answer(question_id):
         }
         
         col_answers.insert_one(answer)
-        col_questions.update_one({'id': question_id}, {'$set': {'$inc': {'answersNumber': 1}}})
 
         if answer_is_correct:
             return 'Resposta Correta.', 200
@@ -219,6 +221,7 @@ def insert_answer(question_id):
             return 'Resposta Incorreta.', 200
     else:
         return 'Resposta já registrada.', 203
+
 
 @app.route('/v1/questions/answer', methods=['GET'])
 @jwt_required
