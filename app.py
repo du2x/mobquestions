@@ -125,7 +125,7 @@ def put_user(username):
 #    return disciplina, 200
 
 @app.route('/v1/authenticate', methods=['POST'])
-def authenticate():
+def authenticate_user():
     data = request.get_json()
     user = col_users.find_one({'username': data['username']})
     if  'username' in data.keys() and 'password' in data.keys(): 
@@ -138,6 +138,7 @@ def authenticate():
                 return 'Dados não enviados corretamente', 403
     else:
         return 'Dados não enviados corretamente', 400
+
 @app.route('/v1/users/<username>', methods=['PATCH']) 
 def patch_password(username):
     data = request.get_json()
@@ -165,18 +166,21 @@ def get_question(question_id):
         return json_util.dumps(res_get), 200
 
 @app.route('/v1/questions/<question_id>/comment', methods=['POST'])
-def authenticate():
+def insert_comment(question_id):
     data = request.get_json()
     questao = col_questions.find_one({'id': question_id})
     user = col_users.find_one({'username': data['username']})
+    comment = {}
+    comment['username'] = data['username']
+    comment['comment'] = data['comment']
     if  'username' in data.keys() and 'message' in data.keys(): 
         if user  == None: 
             return 'Dados não enviados corretamente', 403
         else: 
-            if data[comment] == None:
-                return 'Dados não enviados corretamente', 200
+            if data['comment'] == None:
+                return 'Dados não enviados corretamente', 403
             else: 
-                col_questions.update_one('id':questao), 403
+                col_questions.update_one({'id': questao}, {'$set': comment}), 200
     else:
         return 'Dados não enviados corretamente', 400
     
