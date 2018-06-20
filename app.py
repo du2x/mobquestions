@@ -5,12 +5,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson import json_util
 
-from config import MONGO_URI
+from config import MONGO_URI, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from auth import *
 
 import redis
 
-rcache = redis.Redis( host='redis-12770.c12.us-east-1-4.ec2.cloud.redislabs.com', port=12770)
+rcache = redis.Redis( host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = MONGO_URI
