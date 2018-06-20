@@ -243,5 +243,10 @@ def set_featured_questions():
 
 @app.route('/v1/featured_questions', methods=['GET'])
 def get_featured_questions():
-    pass
-
+    featured_questions = rcache.get('featured_questions')
+    if featured_questions is not None:
+        return featured_questions, 200
+    else:
+        featured_questions = list(col_questions.find({}).sort([('answersNumber', DESCENDING)]).limit(10))
+        rcache.set('featured_questions', json_util.dumps(featured_questions))
+        return json_util.dumps(featured_questions), 200
