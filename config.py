@@ -14,3 +14,6 @@
 #MONGO_DBNAME='ubiqs'
 
 MONGO_URI='mongodb://user:user@ds045618.mlab.com:45618/poc_puc'
+REDIS_PASSWORD='FMGsQyE0M781bNfvGYTKN7zxTtKpnPad'
+REDIS_PORT=12770
+REDIS_HOST='redis-12770.c12.us-east-1-4.ec2.cloud.redislabs.com'
