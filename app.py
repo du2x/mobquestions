@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, redirect, g
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, DESCENDING
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -211,7 +211,7 @@ def insert_answer(question_id):
         }
         
         col_answers.insert_one(answer)
-        col_questions.update_one({'id': question_id}, {'$set': {'$inc': {'answersNumber': 1}}})
+        col_questions.update_one({'id': question_id}, {'$inc': {'answersNumber': 1}})
 
         if answer_is_correct:
             return 'Resposta Correta.', 200
@@ -230,3 +230,11 @@ def get_answer():
         return json_util.dumps(answers), 200
     else:
         return 'Not Found', 404
+
+@app.route('/v1/featured_questions', methods=['POST'])
+def set_featured_questions():
+    featured_questions = col_questions.find({}).sort([('answersNumber', DESCENDING)]).limit(10)
+    rcache.set('featured_questions', json_util.dumps(list(featured_questions)))
+    return 'Cache updated', 200
+
+
