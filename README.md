@@ -41,7 +41,7 @@ Implemente as seguintes rotas.
 0. POST `/v1/users/` (novo usuário)
 cadastra um novo usuário, com os dados: username, password, email, name, phones.
 retorna status code 201 caso o usuário seja criado; caso o 
-*username* enviado já exista na base de dados, retornar status code 203.
+*username* enviado já exista na base de dados, retornar status code 409 (Conflict).
 exemplo de dados de request: 
 ```javascript
 {"username": "mark", "password": "a123", "email": "mark@knopfler.com", "name": "Mark", "phones": ["3333-2222", "2222-3333"]}

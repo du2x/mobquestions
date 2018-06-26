@@ -5,16 +5,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson import json_util
 
-from config import MONGO_URI
+from config import MONGO_URI, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from auth import *
 
 import os
 import redis
 
 rcache = redis.Redis(
-            host='redis-19805.c15.us-east-1-2.ec2.cloud.redislabs.com', 
-            port=19805,
-            password='TWizEVRLkIqSMslo4lqFtJaA9EpBWeLK')
+            host=REDIS_HOST, 
+            port=REDIS_PORT,
+            password=REDIS_PASSWORD)
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = MONGO_URI
@@ -28,6 +28,17 @@ mongo = PyMongo(app)
 col_users = mongo.db.users
 col_questions = mongo.db.questions
 col_tokens = mongo.db.tokens        # refresh tokens
+
+def create_app(self):
+    app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
+    app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+    app_context = app.app_context()
+    app_context.push()        
+    self.mongo = PyMongo(app, config_prefix='MONGO_aTESTS')
+    self.col_users = self.mongo.db.users
+    self.col_questions = self.mongo.db.questions
+    self.col_tokens = self.mongo.db.tokens        # refresh tokens
+    return app
 
 
 def authenticate(username, password):
@@ -99,9 +110,13 @@ def token():
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
+    if 'password' not in data.keys() or 'username' not in data.keys():
+        return 'Dados insuficientes.', 400
     data['password'] = generate_password_hash(data['password'])
     col_users.insert_one(data)
-    return 'usuario ' + data['username'] + ' criado.', 201
+    del(data['password'])
+    return json_util.dumps(data), 201
+
 
 @app.route('/users/<username>', methods=['GET'])
 def get_user(username):

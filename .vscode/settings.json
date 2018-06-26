@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\du2x\\dev\\mobquestions\\env\\Scripts",
+    "python.pythonPath": "${workspaceFolder}/env/bin/python",
     "python.linting.pylintEnabled": false
 }
