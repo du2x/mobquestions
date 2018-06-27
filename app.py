@@ -16,26 +16,19 @@ rcache = redis.Redis(
             port=REDIS_PORT,
             password=REDIS_PASSWORD)
 
-app = Flask(__name__)
-if app.config['TESTING']:
-    app.config['MONGO_URI'] = MONGO_URI
-else:
-    app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
-app.config['DEBUG'] = True
 
-app_context = app.app_context()
-app_context.push()
-
-
-def create_app(self):
-    app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
+def create_app(testing = False):
+    app = Flask(__name__)
+    if testing:
+        app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
+    else:
+        app.config['MONGO_URI'] = MONGO_URI_TESTS
     app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
-    app.config['TESTING']=True
     app_context = app.app_context()
     app_context.push()        
     return app
 
-
+app = create_app()
 mongo = PyMongo(app)
 
 col_users = mongo.db.users
