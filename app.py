@@ -19,15 +19,16 @@ rcache = redis.Redis(
 
 def create_app(testing = False):
     app = Flask(__name__)
-    if testing:
-        app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
-    else:
+    if os.getenv('FLASK_TESTING') and os.getenv('FLASK_TESTING')==1:
         app.config['MONGO_URI'] = MONGO_URI_TESTS
+    else:
+        app.config['MONGO_URI'] = MONGO_URI
     app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
     app_context = app.app_context()
     app_context.push()        
     return app
 
+mongo = None
 app = create_app()
 mongo = PyMongo(app)
 

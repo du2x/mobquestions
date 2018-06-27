@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash
 
 from pymongo import MongoClient
 
-from app import create_app
+from app import app
 
 from config import MONGO_URI_TESTS
 
@@ -20,10 +20,7 @@ class MainTestCase(TestCase):
     TESTING = True
 
     def create_app(self):
-        app = create_app(testing = True)
-        app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
-        app_context = app.app_context()
-        app_context.push()        
+        app.config['MONGO_URI'] = MONGO_URI_TESTS
         return app
 
 
