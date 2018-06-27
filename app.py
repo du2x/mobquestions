@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson import json_util
 
-from config import MONGO_URI, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+from config import MONGO_URI, MONGO_URI_TESTS, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from auth import *
 
 import os
@@ -17,28 +17,30 @@ rcache = redis.Redis(
             password=REDIS_PASSWORD)
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = MONGO_URI
+if app.config['TESTING']:
+    app.config['MONGO_URI'] = MONGO_URI
+else:
+    app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
 app.config['DEBUG'] = True
 
 app_context = app.app_context()
 app_context.push()
+
+
+def create_app(self):
+    app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
+    app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+    app.config['TESTING']=True
+    app_context = app.app_context()
+    app_context.push()        
+    return app
+
 
 mongo = PyMongo(app)
 
 col_users = mongo.db.users
 col_questions = mongo.db.questions
 col_tokens = mongo.db.tokens        # refresh tokens
-
-def create_app(self):
-    app.config['MONGO_TESTS_URI'] = MONGO_URI_TESTS
-    app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
-    app_context = app.app_context()
-    app_context.push()        
-    self.mongo = PyMongo(app, config_prefix='MONGO_aTESTS')
-    self.col_users = self.mongo.db.users
-    self.col_questions = self.mongo.db.questions
-    self.col_tokens = self.mongo.db.tokens        # refresh tokens
-    return app
 
 
 def authenticate(username, password):
