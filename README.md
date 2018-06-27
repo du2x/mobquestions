@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/du2x/pystro.svg?branch=master)](https://travis-ci.org/du2x/pystro) 
+
+
 # mobquestions
 
 Repositório de atividade em grupo da disciplina de arquitetura de computação em nuvens da pós graduação de Desenvolvimento de Aplicações Móveis da PUC-MG.
