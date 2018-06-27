@@ -1,24 +1,35 @@
 from flask import Flask, request, jsonify, redirect, g
-from flask_pymongo import PyMongo, DESCENDING
+from flask_pymongo import PyMongo
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson import json_util
 
-from config import MONGO_URI, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+from config import MONGO_URI, MONGO_URI_TESTS, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from auth import *
 
+import os
 import redis
 
-rcache = redis.Redis( host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+rcache = redis.Redis(
+            host=REDIS_HOST, 
+            port=REDIS_PORT,
+            password=REDIS_PASSWORD)
 
-app = Flask(__name__)
-app.config['MONGO_URI'] = MONGO_URI
-app.config['DEBUG'] = True
 
-app_context = app.app_context()
-app_context.push()
+def create_app(testing = False):
+    app = Flask(__name__)
+    if os.getenv('FLASK_TESTING') and os.getenv('FLASK_TESTING')==1:
+        app.config['MONGO_URI'] = MONGO_URI_TESTS
+    else:
+        app.config['MONGO_URI'] = MONGO_URI
+    app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+    app_context = app.app_context()
+    app_context.push()        
+    return app
 
+mongo = None
+app = create_app()
 mongo = PyMongo(app)
 
 col_users = mongo.db.users
