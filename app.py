@@ -101,6 +101,10 @@ def token():
 @app.route('/v1/users', methods=['POST'])
 def create_user():
     data = request.get_json()
+
+    if 'password' not in data.keys() or 'username' not in data.keys():
+        return 'Bad Request', 400
+
     username = data['username']
     
     user = col_users.find_one({'username': username}, {'_id': 0, 'username': 1})
@@ -110,7 +114,7 @@ def create_user():
         col_users.insert_one(data)
         return 'usuario ' + data['username'] + ' criado.', 201
     else:
-        return 'usuario ' + data['username'] + ' já existe.', 203
+        return 'usuario ' + data['username'] + ' já existe.', 201
 
 
 @app.route('/v1/users/<username>', methods=['GET'])
