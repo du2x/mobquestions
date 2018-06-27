@@ -90,8 +90,16 @@ retorna as questões encontradas baseadas nos critérios de busca e o status cod
 
 8. Modifique as implementações das rotas 3. e 6. para que elas requeiram o envio de um token válido. Teste-os com Postman.
 
-9. POST `/v1/questions/<question_id>/answer`  (responder questao)
+9. POST `/v1/questions/answer/`  (responder questao)
 retorna se a resposta enviada foi correta ou não. Esta rota deve requerer o envio de um token válido.
+Caso a resposta enviada não esteja no domínio de opções válidas, retornar status code 400.
+Exemplo de dados enviados:
+```javascript
+[{"id": "q234541-4c", "answer": "E"},
+{"id": "w23as41-5b", "answer": "C"}
+]
+```
+
 
 10. GET `/v1/questions/answers` (visualizar respostas)
 retorna as respostas enviadas (answer) nas questões respondidas pelo **usuário autenticado**. Observe que para que isso seja possível, a implementação rota 9. deve armazenar as respostas enviadas pelo usuário na coleção de usuários.

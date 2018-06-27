@@ -52,10 +52,14 @@ class MainTestCase(TestCase):
         self.assertEquals(response.status_code, 400)
 
 
-
     def test_get_user(self):
         response = self.client.get('/users/mark')
         self.assertEquals(response.status_code, 200)
+
+
+    #def test_get_user_not_found(self):
+    #    response = self.client.get('/users/klaus')
+    #    self.assertEquals(response.status_code, 404)
 
 
     def tearDown(self):
