@@ -13,6 +13,7 @@ token_timeout = 5 # time in minutes
 jwt_algorithm = 'HS256'
 SECRET_KEY = 'super-secret'
 
+
 def jwt_required(f):
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
@@ -49,7 +50,6 @@ def jwt_refresh_required(f):
 			return jsonify(message='Token has expired'), 401
 		return f(*args, **kwargs)
 	return decorated_function
-
 
 
 def create_access_token(user):

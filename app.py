@@ -34,11 +34,13 @@ def authenticate(username, password):
     else:
         return None
 
+
 def int_try_parse(value):
     try:
         return int(value)
     except ValueError:
         return value
+
 
 @app.route('/signin', methods=['POST'])
 def signin():
@@ -99,6 +101,7 @@ def create_user():
     else:
         return 'usuario ' + data['username'] + ' já existe.', 203
 
+
 @app.route('/v1/users/<username>', methods=['GET'])
 def get_user(username):
     res_get = col_users.find_one({'username': username}, {'_id': 0, 'password': 0})
@@ -106,6 +109,7 @@ def get_user(username):
         return 'Usuário não encontrado', 404
     else:
         return json_util.dumps(res_get), 200
+
 
 @app.route('/v1/users/<username>', methods=['PUT'])
 @jwt_required
@@ -126,6 +130,7 @@ def put_user(username):
         col_users.update_one({'username': username}, {'$set': user})
         return 'usuario ' + username + ' atualizado.', 200
 
+
 @app.route('/v1/authenticate', methods=['POST'])
 def authenticate_user():
     data = request.get_json()
@@ -141,6 +146,7 @@ def authenticate_user():
     else:
         return 'Dados não enviados corretamente', 400
 
+
 @app.route('/v1/users/<username>', methods=['PATCH']) 
 def patch_password(username):
     data = request.get_json()
@@ -153,6 +159,7 @@ def patch_password(username):
         col_users.update_one({'username': username}, {'$set': user})
         return 'Senha do usuário ' + username + ' atualizada.', 200
 
+
 @app.route('/v1/questions/search', methods=['GET'])
 def search():
     args = request.args.to_dict()
@@ -164,6 +171,7 @@ def search():
     questions = col_questions.find(args)
     return json_util.dumps(list(questions)), 200
 
+
 @app.route('/v1/questions/<question_id>', methods=['GET'])
 def get_question(question_id):
     res_get = col_questions.find_one({'id': question_id})
@@ -171,6 +179,7 @@ def get_question(question_id):
         return 'Questão não encontrada', 404
     else:
         return json_util.dumps(res_get), 200
+
 
 @app.route('/v1/questions/<question_id>/comment', methods=['POST'])
 @jwt_required
@@ -235,11 +244,13 @@ def get_answer():
     else:
         return 'Not Found', 404
 
+
 @app.route('/v1/featured_questions', methods=['POST'])
 def set_featured_questions():
     featured_questions = col_questions.find({}).sort([('answersNumber', DESCENDING)]).limit(10)
     rcache.set('featured_questions', json_util.dumps(list(featured_questions)))
     return 'Cache updated', 200
+
 
 @app.route('/v1/featured_questions', methods=['GET'])
 def get_featured_questions():
