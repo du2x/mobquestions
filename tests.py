@@ -80,7 +80,6 @@ class MainTestCase(TestCase):
 
     def tearDown(self):
         # apagar todos documentos
-        print('deleta tudo')
         self.col_users.delete_many({})
         self.col_questions.delete_many({})
         self.col_tokens.delete_many({})

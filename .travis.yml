@@ -8,6 +8,7 @@ install:
 before_script:
   - export FLASK_APP="$TRAVIS_BUILD_DIR/app.py"
   - export FLASK_DEBUG=1
+  - export FLASK_TESTING="1"
 
 script: 
   - nosetests
