@@ -50,14 +50,14 @@ class MainTestCase(TestCase):
         self.assertEquals(response.status_code, 201)
 
 
-#    def test_signin(self):
-#        data = {'username': 'foo', 'password': '123'}
-#        response = self.client.post('/signin', 
-#                                    data=json.dumps(data), 
-#                                    content_type='application/json')
-#        response_data = json_util.dumps(response.data)
-#        self.token = response_data['access_token']
-#        self.assertEquals(response.status_code, 200)
+    def test_signin(self):
+        data = {'username': 'foo', 'password': '123'}
+        response = self.client.post('/signin', 
+                                    data=json.dumps(data), 
+                                    content_type='application/json')
+        response_data = json.loads(response.data)
+        self.token = response_data['access_token']
+        self.assertEquals(response.status_code, 200)
 
 
     def test_create_user_no_username(self):
@@ -69,7 +69,7 @@ class MainTestCase(TestCase):
 
 
     def test_get_user(self):
-        response = self.client.get('/v1/users/mark')
+        response = self.client.get('/v1/users/foo')
         self.assertEquals(response.status_code, 200)
 
 
@@ -80,6 +80,7 @@ class MainTestCase(TestCase):
 
     def tearDown(self):
         # apagar todos documentos
+        print('deleta tudo')
         self.col_users.delete_many({})
         self.col_questions.delete_many({})
         self.col_tokens.delete_many({})

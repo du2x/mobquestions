@@ -19,7 +19,7 @@ rcache = redis.Redis(
 
 def create_app(testing = False):
     app = Flask(__name__)
-    if os.getenv('FLASK_TESTING') and os.getenv('FLASK_TESTING')==1:
+    if os.getenv('FLASK_TESTING') and os.getenv('FLASK_TESTING')=="1":
         app.config['MONGO_URI'] = MONGO_URI_TESTS
     else:
         app.config['MONGO_URI'] = MONGO_URI
@@ -57,13 +57,15 @@ def int_try_parse(value):
 def signin():
     data = request.get_json()
     user = authenticate(data['username'], data['password'])
+
     if user:
         token_payload = {'username': user['username']}
         access_token = create_access_token(token_payload)
         refresh_token = create_refresh_token(token_payload)
         col_tokens.insert_one({'value': refresh_token})
-        return jsonify({'access_token': access_token, 
-                        'refresh_token': refresh_token})
+        response = json_util.dumps({'access_token': access_token, 
+                                    'refresh_token': refresh_token})
+        return response
     else:
         return "Unauthorized", 401
 
@@ -110,16 +112,23 @@ def create_user():
     user = col_users.find_one({'username': username}, {'_id': 0, 'username': 1})
 
     if user is None:
+        print('user: ', user)
         data['password'] = generate_password_hash(data['password'])
         col_users.insert_one(data)
+        res = col_users.find({})
+        print(json_util.dumps(list(res)))
         return 'usuario ' + data['username'] + ' criado.', 201
     else:
-        return 'usuario ' + data['username'] + ' já existe.', 201
+        print('user: ', user)
+        return 'usuario ' + data['username'] + ' já existe.', 200
 
 
 @app.route('/v1/users/<username>', methods=['GET'])
 def get_user(username):
+    res = col_users.find({})
+    print(json_util.dumps(list(res)))
     res_get = col_users.find_one({'username': username}, {'_id': 0, 'password': 0})
+    print('res_get: ', res_get)
     if res_get == None: 
         return 'Usuário não encontrado', 404
     else:
