@@ -133,7 +133,7 @@ retorna as perguntas mais respondidas. Deve utilizar o cache para obter o result
 ```python
 self.client.post('/v1/questions/answer',
                 headers={'Authorization': 'JWT ' + self.token},
-                data=json.dumps({"id": "q234541-4c", "answer": "E"})
+                data=json.dumps({"id": "bc3b3701-b7", "answer": "E"})
                 )
 ```
 
