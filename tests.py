@@ -1,4 +1,4 @@
-import json
+from flask import json
 
 from bson import json_util
 
@@ -59,7 +59,7 @@ class MainTestCase(TestCase):
         response = self.client.post('/signin', 
                                     data=json.dumps(data), 
                                     content_type='application/json')
-        response_data = json_util.dumps(response.data)
+        response_data = json.dumps(response.data)
         self.token = response_data['access_token']
         self.assertEquals(response.status_code, 200)
 
