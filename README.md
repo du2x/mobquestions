@@ -127,7 +127,7 @@ retorna as perguntas mais respondidas. Deve utilizar o cache para obter o result
 
 14. Done - Implemente o teste  `test_create_user_no_username` que afere que uma requisição para a rota `/v1/create_user` sem o envio de *username* resulta em uma resposta com código de status **400**.
 
-15. Done - Crie e implemente o teste  `test_create_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* resulta em uma resposta com código de status **200**.
+15. Done - Crie e implemente o teste  `test_create_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* resulta em uma resposta com código de status **201**.
 
 16. Done - Crie e implemente o teste  `test_create_repeated_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* com *username* já existente resulta em uma resposta com código de status **409**.
 

@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 
 from config import MONGO_URI, MONGO_URI_TESTS, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+
 from auth import *
 
 import os
@@ -255,6 +256,7 @@ def insert_answer(question_id):
 @app.route('/v1/questions/answer', methods=['GET'])
 @jwt_required
 def get_answer():
+    print('test')
     jwt = g.parsed_token
     answers = list(col_answers.find({'username': jwt['username']}, {'_id': 0, 'id': 1, 'answer': 1}))
     
