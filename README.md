@@ -120,6 +120,25 @@ atualiza o cache com as perguntas mais respondidas. antes de implementar esta ro
 12. GET `/v1/featured_questions` (perguntas destaque)
 retorna as perguntas mais respondidas. Deve utilizar o cache para obter o resultado.
 
+-----
+### Testes
+
+13. Confira se o teste `test_get_user_not_found` executa com sucesso em sua implementação. Caso falhe, modifique em app.py para que este teste execute com sucesso.
+
+14. Implemente o teste  `test_create_user_no_username` que afere que uma requisição para a rota `/v1/create_user` sem o envio de *username* resulta em uma resposta com código de status **400**.
+
+15. Crie e implemente o teste  `test_create_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* resulta em uma resposta com código de status **200**.
+
+16. Crie e implemente o teste  `test_create_repeated_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* com *username* já existente resulta em uma resposta com código de status **409**.
+
+17. Crie e implemente o teste `test_answer_question` que afere se o resultado da resposta de uma requisição para `/v1/questions/answer/` retorna o código de status **200** e o resultado conforme o esperado ('C' se a resposta da questão enviada foi certa, 'E' caso contrário). Observe que esta rota demanda o envio de token). Os testes rodam de forma sequencial na ordem em que são escritos. O teste `test_signin` ao ser executado, armazena no atributo `self.token` o token do usuário `fulano`, e estará disponível para todos os testes escritos depois de `test_signin`. Para enviar o token na requisição, será necessário utilizar o parametro `headers` de `self.client` como a seguir, por exemplo: 
+```python
+self.client.post('/v1/questions/answer',
+                headers={'Authorization': 'JWT ' + self.token},
+                data=json.dumps({"id": "bc3b3701-b7", "answer": "E"})
+                )
+```
+
 ## Deploy em Heroku
 
 Heroku é um serviço de plataforma como serviço em nuvens.
