@@ -222,13 +222,13 @@ def insert_comment(question_id):
         return 'Dados não enviados corretamente', 401
 
 
-@app.route('/v1/questions/<question_id>/answer', methods=['POST'])
+@app.route('/v1/questions/answer', methods=['POST'])
 @jwt_required
-def insert_answer(question_id):
-    data = request.get_json()
+def insert_answer():
     jwt = g.parsed_token
+    data = request.get_json()
     userAnswer = data['answer'].upper()
-    print(data)
+    question_id = data['id']
     answer = col_answers.find_one({'id': question_id, 'username': jwt['username']})
 
     if answer is None:
@@ -246,17 +246,16 @@ def insert_answer(question_id):
         col_questions.update_one({'id': question_id}, {'$inc': {'answersNumber': 1}})
 
         if answer_is_correct:
-            return 'Resposta Correta.', 200
+            return 'Resposta Correta', 200
         else:
-            return 'Resposta Incorreta.', 200
+            return 'Resposta Incorreta', 200
     else:
-        return 'Resposta já registrada.', 203
+        return 'Resposta já registrada', 409
 
 
 @app.route('/v1/questions/answer', methods=['GET'])
 @jwt_required
 def get_answer():
-    print('test')
     jwt = g.parsed_token
     answers = list(col_answers.find({'username': jwt['username']}, {'_id': 0, 'id': 1, 'answer': 1}))
     

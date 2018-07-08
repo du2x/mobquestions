@@ -62,14 +62,9 @@ class MainTestCase(TestCase):
     
 
     def answers_populate(self):
-        correct = { "username" : "foo", "answer" : "C",
-                    "answer_is_correct" : True, "id" : "bc3b3701-b7"}
-
-        wrong = { "username" : "foo", "answer" : "E",
-                  "answer_is_correct" : True, "id" : "c14ca8e5-b7"}
-        
-        self.col_answers.insert_one(correct)
-        self.col_answers.insert_one(wrong)
+        answer = { "username" : "foo", "answer" : "C",
+                   "answer_is_correct" : True, "id" : "c14ca8e5-b7"}
+        self.col_answers.insert_one(answer)
 
 
     def setUp(self):
@@ -135,27 +130,50 @@ class MainTestCase(TestCase):
 
     """ Answer tests"""
 
-    # def test_answer_question(self): #Continuar daqui
-    #     # data1 = {'username': 'foo', 'password': '123'}
+    def test_answer_question(self):
+        data = {'id': 'bc3b3701-b7', 'answer': 'C'}
 
-    #     # response1 = self.client.post('/signin', 
-    #     #                            data=json.dumps(data1), 
-    #     #                            content_type='application/json')
-    #     # response_data = json.loads(response1.data)
-    #     # self.token = response_data['access_token']
-    #     # data = {'answer': 'E'}
-    #     # response = self.client.post('/v1/questions/bc3b3701-b7/answer',
-    #     #                            headers={'Authorization': 'JWT ' + self.token},
-    #     #                            data=json_util.dumps(data))
+        response = self.client.post('/v1/questions/answer',
+                                    headers={'Authorization': 'JWT ' + self.token},
+                                    data=json_util.dumps(data), 
+                                    content_type='application/json')
 
-    #     data = {"id": "bc3b3701-b7", "answer": "E"}
-    #     print('token: ', self.token)
-    #     print('data: ', data)
-    #     response = self.client.post('/v1/questions/answer',
-    #                                 headers={'Authorization': 'JWT ' + self.token},
-    #                                 data=json.dumps(data))
-    #     print('response: ', response)
-    #     self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 200)
+
+
+    def test_correct_answer_question(self):
+        data = {'id': 'bc3b3701-b7', 'answer': 'C'}
+
+        response = self.client.post('/v1/questions/answer',
+                                    headers={'Authorization': 'JWT ' + self.token},
+                                    data=json_util.dumps(data), 
+                                    content_type='application/json')
+
+        self.assertEquals(response.data, b'Resposta Correta')
+        self.assertEquals(response.status_code, 200)
+
+
+    def test_wrong_answer_question(self):
+        data = {'id': 'bc3b3701-b7', 'answer': 'E'}
+
+        response = self.client.post('/v1/questions/answer',
+                                    headers={'Authorization': 'JWT ' + self.token},
+                                    data=json_util.dumps(data), 
+                                    content_type='application/json')
+
+        self.assertEquals(response.data, b'Resposta Incorreta')
+        self.assertEquals(response.status_code, 200)
+
+    
+    def test_find_answers(self):
+        response_data = [{'answer': 'C', 'id': 'c14ca8e5-b7'}]
+
+        response = self.client.get('/v1/questions/answer',
+                                    headers={'Authorization': 'JWT ' + self.token},
+                                    content_type='application/json')
+        
+        self.assertEquals(json.loads(response.data), response_data)
+        self.assertEquals(response.status_code, 200)
 
 
     def tearDown(self):
@@ -163,5 +181,5 @@ class MainTestCase(TestCase):
         self.database_cleanup()
 
 
-if __name__ == '__main__':
-    unittest.main()
+# if __name__ == '__main__':
+#     unittest.main()
