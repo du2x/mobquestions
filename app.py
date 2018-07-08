@@ -117,7 +117,7 @@ def create_user():
         col_users.insert_one(data)
         return 'usuario ' + data['username'] + ' criado.', 201
     else:
-        return 'usuario ' + data['username'] + ' já existe.', 200
+        return 'usuario ' + data['username'] + ' já existe.', 409 #alterei o codigo de retorno de 200 para 409
 
 
 @app.route('/v1/users/<username>', methods=['GET'])
@@ -227,6 +227,7 @@ def insert_answer(question_id):
     data = request.get_json()
     jwt = g.parsed_token
     userAnswer = data['answer'].upper()
+    print(data)
     answer = col_answers.find_one({'id': question_id, 'username': jwt['username']})
 
     if answer is None:
