@@ -49,7 +49,7 @@ class MainTestCase(TestCase):
     def test_create_user(self):
         data = {'username': 'mark', 'name': 'Mark', 'password': '123', 'email':'mark@gmail.com'}
         response = self.client.post('/users', 
-                                    data=json_util.dumps(data), 
+                                    data=json.dumps(data), 
                                     content_type='application/json')
         self.assertEquals(response.status_code, 201)
 
@@ -59,7 +59,7 @@ class MainTestCase(TestCase):
         response = self.client.post('/signin', 
                                     data=json.dumps(data), 
                                     content_type='application/json')
-        response_data = json.dumps(response.data)
+        response_data = json.loads(response.data)
         self.token = response_data['access_token']
         self.assertEquals(response.status_code, 200)
 
