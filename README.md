@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/du2x/pystro.svg?branch=master)](https://travis-ci.org/du2x/pystro) 
+
+
 # mobquestions
 
 Repositório de atividade em grupo da disciplina de arquitetura de computação em nuvens da pós graduação de Desenvolvimento de Aplicações Móveis da PUC-MG.
@@ -36,12 +39,12 @@ git clone https://github.com/<seu_nome_de_usuario>/mobquestions
 
 ## Atividades
 
-Implemente as seguintes rotas.
+### Implemente as seguintes rotas
 
 0. POST `/v1/users/` (novo usuário)
 cadastra um novo usuário, com os dados: username, password, email, name, phones.
 retorna status code 201 caso o usuário seja criado; caso o 
-*username* enviado já exista na base de dados, retornar status code 203.
+*username* enviado já exista na base de dados, retornar status code 409 (Conflict).
 exemplo de dados de request: 
 ```javascript
 {"username": "mark", "password": "a123", "email": "mark@knopfler.com", "name": "Mark", "phones": ["3333-2222", "2222-3333"]}
@@ -76,11 +79,11 @@ exemplo de dados de request:
 retorna os dados da questão correpondente (pelo username) em formato JSON e o status code 200; ou status code 404 caso a questão não exista.
 
 
-6. POST `/v1/questions/<question_id>/comment` (incluir comentário em questão)
+6. POST `/v1/comment` (incluir comentário em questão)
 retorna os dados da questão atualizada em formato json e o status code 200 em caso de sucesso.
 se a questão não for encontrada, status code 404. se o usuário não for encontrado, ou os dados enviados estiverem inválidos retornar status code 400.
 ```javascript
-{"username": "mark", "message": "essa questao e facil"}
+{"question_id": "yut4fsd-qs", "username": "mark", "message": "essa questao e facil"}
 ```
 
 7. GET `/v1/questions/search` (buscar questões)
@@ -90,8 +93,14 @@ retorna as questões encontradas baseadas nos critérios de busca e o status cod
 
 8. Modifique as implementações das rotas 3. e 6. para que elas requeiram o envio de um token válido. Teste-os com Postman.
 
-9. POST `/v1/questions/<question_id>/answer`  (responder questao)
+9. POST `/v1/questions/answer/`  (responder questao)
 retorna se a resposta enviada foi correta ou não. Esta rota deve requerer o envio de um token válido.
+Caso a resposta enviada não esteja no domínio de opções válidas, retornar status code 400.
+Exemplo de dados enviados:
+```javascript
+{"id": "q234541-4c", "answer": "E"}
+```
+
 
 10. GET `/v1/questions/answers` (visualizar respostas)
 retorna as respostas enviadas (answer) nas questões respondidas pelo **usuário autenticado**. Observe que para que isso seja possível, a implementação rota 9. deve armazenar as respostas enviadas pelo usuário na coleção de usuários.
@@ -109,6 +118,27 @@ atualiza o cache com as perguntas mais respondidas. antes de implementar esta ro
 12. GET `/v1/featured_questions` (perguntas destaque)
 retorna as perguntas mais respondidas. Deve utilizar o cache para obter o resultado.
 
+<<<<<<< HEAD
+=======
+-----
+### Testes
+
+13. Confira se o teste `test_get_user_not_found` executa com sucesso em sua implementação. Caso falhe, modifique em app.py para que este teste execute com sucesso.
+
+14. Implemente o teste  `test_create_user_no_username` que afere que uma requisição para a rota `/v1/create_user` sem o envio de *username* resulta em uma resposta com código de status **400**.
+
+15. Crie e implemente o teste  `test_create_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* resulta em uma resposta com código de status **200**.
+
+16. Crie e implemente o teste  `test_create_repeated_user` que afere que uma requisição para a rota `/v1/create_user` com o envio de *username* e *password* com *username* já existente resulta em uma resposta com código de status **409**.
+
+17. Crie e implemente o teste `test_answer_question` que afere se o resultado da resposta de uma requisição para `/v1/questions/answer/` retorna o código de status **200** e o resultado conforme o esperado ('C' se a resposta da questão enviada foi certa, 'E' caso contrário). Observe que esta rota demanda o envio de token). Os testes rodam de forma sequencial na ordem em que são escritos. O teste `test_signin` ao ser executado, armazena no atributo `self.token` o token do usuário `fulano`, e estará disponível para todos os testes escritos depois de `test_signin`. Para enviar o token na requisição, será necessário utilizar o parametro `headers` de `self.client` como a seguir, por exemplo: 
+```python
+self.client.post('/v1/questions/answer',
+                headers={'Authorization': 'JWT ' + self.token},
+                data=json.dumps({"id": "bc3b3701-b7", "answer": "E"})
+                )
+```
+>>>>>>> c35e74ea5b628bf59073ba01e45c0536d46f70ef
 
 ## Deploy em Heroku
 

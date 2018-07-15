@@ -5,24 +5,31 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson import json_util
 
-from config import MONGO_URI
+from config import MONGO_URI, MONGO_URI_TESTS, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 from auth import *
 
 import os
 import redis
 
-if os.getenv('REDIS_URL'):
-    rcache = redis.from_url(os.getenv('REDIS_URL'))
-else:
-    rcache = None
+rcache = redis.Redis(
+            host=REDIS_HOST, 
+            port=REDIS_PORT,
+            password=REDIS_PASSWORD)
 
-app = Flask(__name__)
-app.config['MONGO_URI'] = MONGO_URI
-app.config['DEBUG'] = True
 
-app_context = app.app_context()
-app_context.push()
+def create_app(testing = False):
+    app = Flask(__name__)
+    if os.getenv('FLASK_TESTING') and os.getenv('FLASK_TESTING') == '1':
+        app.config['MONGO_URI'] = MONGO_URI_TESTS
+    else:
+        app.config['MONGO_URI'] = MONGO_URI
+    app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = False
+    app_context = app.app_context()
+    app_context.push()        
+    return app
 
+mongo = None
+app = create_app()
 mongo = PyMongo(app)
 
 col_users = mongo.db.users
@@ -62,7 +69,7 @@ def questao_mais_legal_cacheada():
     if rcache and rcache.get('questao_legal'):
         return rcache.get('questao_legal'), 200
     else:
-        question = col_questions.find({'id': 'bc3b3701-b7'})
+        question = col_questions.find({'id': 'c14ca8e5-b7'})
         if rcache:
             rcache.set('questao_legal', json_util.dumps(question))
     return json_util.dumps(question), 200
@@ -99,9 +106,13 @@ def token():
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
+    if 'password' not in data.keys() or 'username' not in data.keys():
+        return 'Dados insuficientes.', 400
     data['password'] = generate_password_hash(data['password'])
     col_users.insert_one(data)
-    return 'usuario ' + data['username'] + ' criado.', 201
+    del(data['password'])
+    return json_util.dumps(data), 201
+
 
 @app.route('/users/<username>', methods=['GET'])
 def get_user(username):
