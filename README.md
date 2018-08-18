@@ -118,8 +118,6 @@ atualiza o cache com as perguntas mais respondidas. antes de implementar esta ro
 12. GET `/v1/featured_questions` (perguntas destaque)
 retorna as perguntas mais respondidas. Deve utilizar o cache para obter o resultado.
 
-<<<<<<< HEAD
-=======
 -----
 ### Testes
 
@@ -138,7 +136,6 @@ self.client.post('/v1/questions/answer',
                 data=json.dumps({"id": "bc3b3701-b7", "answer": "E"})
                 )
 ```
->>>>>>> c35e74ea5b628bf59073ba01e45c0536d46f70ef
 
 ## Deploy em Heroku
 
